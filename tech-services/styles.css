@@ -1,0 +1,164 @@
+@import url("https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,100..900;1,100..900&display=swap");
+
+:root {
+  --primary-color: #3171de;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  font-family: "Epilogue", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  line-height: 1.6;
+  color: #333;
+  background-color: #fff;
+}
+
+/* ----- Components ----- */
+/* Button */
+.btn {
+  padding: 0 25px;
+  min-width: 48px;
+  height: 48px;
+  border-radius: 50px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.btn-primary {
+  background: var(--primary-color);
+  color: white;
+}
+
+/* ----- Header ----- */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 26px 50px;
+}
+
+.navigation-menu {
+  display: flex;
+  align-items: center;
+  gap: 74px;
+  width: fit-content;
+  padding: 16px 68px;
+  border-radius: 50px;
+  background: #f7f7fd;
+}
+
+.navigation-menu span {
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.navigation-menu span:hover {
+  color: var(--primary-color);
+}
+
+.lang-call {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.lang-selection {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+/* ----- Main ----- */
+main {
+  padding: 108px 73px;
+}
+
+.section {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  margin-bottom: 60px;
+  padding: 20px;
+  border-left: 4px solid #e0f7ff; /* Vertical line on the left */
+}
+
+.section h2 {
+  font-size: 24px;
+  color: #007bff;
+  margin-bottom: 20px;
+  background: linear-gradient(45deg, #007bff, #00d2ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: bold;
+}
+
+.section p {
+  margin-bottom: 15px;
+  font-size: 16px;
+  color: #555;
+}
+
+.content {
+  flex: 1;
+}
+
+.brick {
+  position: absolute;
+  top: -70px;
+  left: -20px;
+}
+
+.image-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.section-image {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  border-radius: 20px;
+  padding: 10px;
+  object-fit: cover;
+}
+
+/* .about-us h2 {
+  background: linear-gradient(45deg, #007bff, #00d2ff);
+}
+
+.our-story h2 {
+  background: linear-gradient(45deg, #92fe9d, #00d2ff);
+} */
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .section {
+    flex-direction: column;
+    text-align: center;
+    border-left: none;
+    border-top: 4px solid #e0f7ff; /* Vertical line as top border on mobile */
+    padding-top: 20px;
+  }
+
+  .image-container {
+    margin-top: 20px;
+  }
+
+  .section-image {
+    max-width: 100%;
+  }
+}
