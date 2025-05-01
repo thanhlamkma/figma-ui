@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat AI Layout</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", sans-serif;
+      }
+
+      body {
+        height: 100vh;
+        background-color: #f5f5f7;
+      }
+
+      .app-container {
+        display: grid;
+        grid-template-columns: 250px 1fr 250px;
+        grid-template-rows: auto 1fr auto;
+        height: 100vh;
+      }
+
+      /* Sidebar chung cho cả 2 bên */
+      .sidebar {
+        background-color: #ffffff;
+        border-right: 1px solid #e5e7eb;
+        padding: 16px;
+        overflow-y: auto;
+      }
+
+      .left-sidebar {
+        grid-column: 1;
+        grid-row: 1 / span 3;
+      }
+
+      .right-sidebar {
+        grid-column: 3;
+        grid-row: 1 / span 3;
+        border-right: none;
+        border-left: 1px solid #e5e7eb;
+      }
+
+      /* Phần chat ở giữa */
+      .chat-header {
+        grid-column: 2;
+        grid-row: 1;
+        background-color: #ffffff;
+        padding: 16px;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .chat-container {
+        grid-column: 2;
+        grid-row: 2;
+        background-color: #f9fafb;
+        padding: 20px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .prompt-form {
+        grid-column: 2;
+        grid-row: 3;
+        background-color: #ffffff;
+        padding: 16px;
+        border-top: 1px solid #e5e7eb;
+      }
+
+      /* Style cho chat messages */
+      .message {
+        max-width: 80%;
+        padding: 12px 16px;
+        border-radius: 12px;
+        line-height: 1.5;
+      }
+
+      .user-message {
+        align-self: flex-end;
+        background-color: #3b82f6;
+        color: white;
+        border-bottom-right-radius: 4px;
+      }
+
+      .ai-message {
+        align-self: flex-start;
+        background-color: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-bottom-left-radius: 4px;
+      }
+
+      /* Form input */
+      .prompt-input {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 16px;
+      }
+
+      /* Tiêu đề sidebar */
+      .sidebar-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 16px;
+        color: #111827;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-container">
+      <!-- Sidebar trái -->
+      <div class="sidebar left-sidebar">
+        <h3 class="sidebar-title">Lịch sử chat</h3>
+        <!-- Nội dung sidebar trái -->
+      </div>
+
+      <!-- Phần chat chính -->
+      <header class="chat-header">
+        <h2>Trợ lý AI</h2>
+      </header>
+
+      <div class="chat-container">
+        <!-- Các tin nhắn chat -->
+        <div class="message ai-message">
+          Xin chào! Tôi có thể giúp gì cho bạn hôm nay?
+        </div>
+        <div class="message user-message">
+          Tôi cần giúp thiết kế một layout chat
+        </div>
+      </div>
+
+      <div class="prompt-form">
+        <input
+          type="text"
+          class="prompt-input"
+          placeholder="Nhập tin nhắn..."
+        />
+      </div>
+
+      <!-- Sidebar phải -->
+      <div class="sidebar right-sidebar">
+        <h3 class="sidebar-title">Gợi ý</h3>
+        <!-- Nội dung sidebar phải -->
+      </div>
+    </div>
+  </body>
+</html>
