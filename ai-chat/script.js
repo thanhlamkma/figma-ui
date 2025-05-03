@@ -4,12 +4,14 @@ const promptForm = document.querySelector(".prompt-form");
 const promptInput = promptForm.querySelector(".prompt-input");
 const fileInput = promptForm.querySelector("#file-input");
 const fileUploadWrapper = promptForm.querySelector(".file-upload-wrapper");
+const themeToggle = document.querySelector("#theme-toggle-btn");
 
 // API Setup
 // Replace with your own API key
-const API_KEY = "Your-API-Key";
+const API_KEY = "YOUR_API_KEY";
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
 
+let typingInterval, controller;
 const chatHistory = [];
 const userData = {
   message: "",
@@ -34,14 +36,15 @@ const typingEffect = (text, textElement, botMsgDiv) => {
   const words = text.split(" ");
   let wordIndex = 0;
 
-  const typingInterval = setInterval(() => {
+  typingInterval = setInterval(() => {
     if (wordIndex < words.length) {
       textElement.textContent +=
         (wordIndex === 0 ? "" : " ") + words[wordIndex++];
-      botMsgDiv.classList.remove("loading"); // Remove loading class
       scrollToBottom(); // Scroll to the bottom of the chat container
     } else {
       clearInterval(typingInterval); // Stop typing effect
+      botMsgDiv.classList.remove("loading"); // Remove loading class
+      document.body.classList.remove("bot-responding");
     }
   }, 40);
 };
@@ -49,6 +52,7 @@ const typingEffect = (text, textElement, botMsgDiv) => {
 // Make the API call and generate the bot's response
 const generateResponse = async (botMsgDiv) => {
   const textElement = botMsgDiv.querySelector(".message-text");
+  controller = new AbortController();
 
   // Add user message and file data to chat history
   chatHistory.push({
@@ -77,6 +81,7 @@ const generateResponse = async (botMsgDiv) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ contents: chatHistory }),
+      signal: controller.signal,
     });
 
     const data = await response.json();
@@ -103,7 +108,13 @@ const generateResponse = async (botMsgDiv) => {
 
     console.log(chatHistory);
   } catch (error) {
-    console.log(error);
+    textElement.style.color = "#d62939";
+    textElement.textContent =
+      error.name === "AbortError"
+        ? "Response generation stopped."
+        : error.message;
+    botMsgDiv.classList.remove("loading");
+    document.body.classList.remove("bot-responding");
   } finally {
     userData.file = {}; // Clear the file data after response
   }
@@ -112,7 +123,8 @@ const generateResponse = async (botMsgDiv) => {
 const handleFormSubmit = (e) => {
   e.preventDefault();
   const userMessage = promptInput.value.trim();
-  if (!userMessage) return;
+  if (!userMessage || document.body.classList.contains("bot-responding"))
+    return;
 
   // Clear the input field and file data after submission
   promptInput.value = "";
@@ -120,6 +132,7 @@ const handleFormSubmit = (e) => {
 
   // Store user message in userData object
   userData.message = userMessage;
+  document.body.classList.add("bot-responding", "chats-active");
 
   // Generate user message HTML with optional file attachment
   const userMsgHTML = `<p class="message-text"></p>${
@@ -177,6 +190,54 @@ document.querySelector("#cancel-file-btn").addEventListener("click", () => {
   userData.file = {}; // Clear the file data
   fileUploadWrapper.classList.remove("active", "img-attached", "file-attached");
 });
+
+// Stop on going bot response
+document.querySelector("#stop-response-btn").addEventListener("click", () => {
+  userData.file = {}; // Clear the file data
+  controller?.abort(); // Abort the API call
+  clearInterval(typingInterval); // Stop typing effect
+  chatsContainer
+    .querySelector(".bot-message.loading")
+    .classList.remove("loading");
+  document.body.classList.remove("bot-responding");
+});
+
+// Delete all chats
+document.querySelector("#delete-chats-btn").addEventListener("click", () => {
+  chatHistory.length = 0;
+  chatsContainer.innerHTML = "";
+  document.body.classList.remove("bot-responding", "chats-active");
+});
+
+// Handle suggestions click
+document.querySelectorAll(".suggestions-item").forEach((item) => {
+  item.addEventListener("click", () => {
+    promptInput.value = item.querySelector(".text").textContent;
+    promptForm.dispatchEvent(new Event("submit"));
+  });
+});
+
+// Show/hide controls for mobile on prompt input focus
+document.addEventListener("click", ({ target }) => {
+  const wrapper = document.querySelector(".prompt-wrapper");
+  const shouldHide =
+    target.classList.contains("prompt-input") ||
+    (wrapper.classList.contains("hide-controls") &&
+      (target.id === "add-file-btn" || target.id === "stop-response-btn"));
+  wrapper.classList.toggle("hide-controls", shouldHide);
+});
+
+// Toggle dark/light theme
+themeToggle.addEventListener("click", () => {
+  const isLightTheme = document.body.classList.toggle("light-theme");
+  localStorage.setItem("themeColor", isLightTheme ? "light_mode" : "dark_mode");
+  themeToggle.textContent = isLightTheme ? "dark_mode" : "light_mode";
+});
+
+// Set initial theme based on localStorage value
+const isLightTheme = localStorage.getItem("themeColor") === "light_mode";
+document.body.classList.toggle("light-theme", isLightTheme);
+themeToggle.textContent = isLightTheme ? "dark_mode" : "light_mode";
 
 promptForm.addEventListener("submit", handleFormSubmit);
 promptForm
